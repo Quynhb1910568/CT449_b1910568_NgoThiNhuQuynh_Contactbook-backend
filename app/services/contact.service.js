@@ -18,28 +18,26 @@ class ContactService {
         );
         return contact;
     }
-    
+
     async create(payload) {
         const contact = this.extractConactData(payload);
         const result = await this.Contact.findOneAndUpdate(
-        contact,
-        { $set: { favorite: contact.favorite === true } },
-        { returnDocument: "after", upsert: true }
+            contact,
+            { $set: { favorite: contact.favorite == true } },
+            { returnDocument: "after", upsert: true }
         );
         return result.value;
     }
-
+        
     async find(filter) {
         const cursor = await this.Contact.find(filter);
         return await cursor.toArray();
         }
-
         async findByName(name) {
         return await this.find({
         name: { $regex: new RegExp(name), $options: "i" },
         });
     }
-
     async findById(id) {
         return await this.Contact.findOne({
         _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
@@ -57,7 +55,7 @@ class ContactService {
         { returnDocument: "after" }
         );
         return result.value;
-    }  
+    }   
 
     async delete(id) {
         const result = await this.Contact.findOneAndDelete({
@@ -74,7 +72,5 @@ class ContactService {
         const result = await this.Contact.deleteMany({});
         return result.deletedCount;
     }
-
-    
 }
 module.exports = ContactService;
